@@ -50,3 +50,9 @@ DEPENDPATH += $$PWD/../inLib
 
 RESOURCES += \
     res.qrc
+
+
+# 国际化
+TRANSLATIONS = myI18N_zh_CN.ts
+
+

@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     resize(600,800);
+//    ui->retranslateUi(this);
 
     setCentralWidget(textEdit);
 
@@ -31,26 +32,26 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::createActions()
 {
     //menuBar() 系统默认给的Bar
-    QMenu *fileMenu = menuBar()->addMenu("File");
+    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QToolBar *mainToolBar = this->ui->mainToolBar;
 
     const QIcon openFolderIcon = QIcon::fromTheme("document-open", QIcon(":/res/images/icon_open_folder.png"));
-    QAction *openFolderAction = new QAction(openFolderIcon, "Open Folder...", this);
+    QAction *openFolderAction = new QAction(openFolderIcon, tr("Open Folder..."), this);
     // QKeySequence类中定义了一套跨平台的快捷键列表。
     //QKeySequence::New在window平台的大多数软件等同于Ctrl+N
     openFolderAction->setShortcuts(QKeySequence::Open);
-    openFolderAction->setStatusTip("Open an existing folder");
+    openFolderAction->setStatusTip(tr("Open an existing folder"));
     connect(openFolderAction, &QAction::triggered, this, &MainWindow::openFolder);
     fileMenu->addAction(openFolderAction);
     mainToolBar->addAction(openFolderAction);
 
     fileMenu->addSeparator();
     const QIcon exitIcon = QIcon::fromTheme("application-exit");
-    QAction *exitAct = fileMenu->addAction(exitIcon, "Exit", this, &QWidget::close);
+    QAction *exitAct = fileMenu->addAction(exitIcon, tr("Exit"), this, &QWidget::close);
     exitAct->setShortcuts(QKeySequence::Quit);
-    exitAct->setStatusTip(tr("Exit the application"));
-    QMenu *editMenu = menuBar()->addMenu("Edit");
-    QToolBar *editToolBar = addToolBar("Edit");
+    exitAct->setStatusTip("Exit the application");
+    fileMenu->addAction(exitAct);
+
 }
 
 void MainWindow::openFolder()
@@ -58,6 +59,7 @@ void MainWindow::openFolder()
     //打开文件夹
     QUrl folderUrl = QFileDialog::getExistingDirectoryUrl(this);
     //file:///F:/gitWs/glance/make_bin/src/release
+    //如果没有打开文件 返回""
     qDebug()<< folderUrl.toString();
 
 }
