@@ -15,6 +15,11 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void createActions();
+    void createStatusBar();
+    void readSettings();
+    void writeSettings();
+    void openFolder();
     void loadFile(const QString &fileName);
     void setCurrentFile(const QString &fileName);
     //文本框

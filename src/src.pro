@@ -47,3 +47,6 @@ else:unix: LIBS += -L$$OUT_PWD/../inLib/ -linLib
 
 INCLUDEPATH += $$PWD/../inLib
 DEPENDPATH += $$PWD/../inLib
+
+RESOURCES += \
+    res.qrc
