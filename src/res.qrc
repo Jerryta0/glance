@@ -1,12 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>res/images/icon_folder.png</file>
-        <file>res/images/icon_font.png</file>
-        <file>res/images/icon_save.png</file>
-        <file>res/images/icon_settings.png</file>
-        <file>res/images/iocn_file.png</file>
-        <file>res/images/icon_open_folder.png</file>
-        <file>res/images/icon_roundclose.png</file>
         <file>myI18N_zh_CN.qm</file>
+        <file>res/images/icon_folder-open-outline.svg</file>
     </qresource>
 </RCC>

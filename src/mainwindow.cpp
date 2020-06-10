@@ -4,22 +4,46 @@
 #include <QTextStream>
 #include <QFileDialog>
 #include <QDebug>
+#include <QHBoxLayout>
+#include <QScrollArea>
+#include <QPushButton>
+
+
+#include <QFileSystemModel>
+#include <QFileIconProvider>
+#include <QTreeView>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "inlib.h"
 #include "common/systemConsts.h"
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    textEdit(new QPlainTextEdit)
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    resize(600,800);
-//    ui->retranslateUi(this);
+    resize(widthOfMianWin,heightOfMianWin);
 
-    setCentralWidget(textEdit);
+    model = new QFileSystemModel(this);
+    QString rootPath = "D:/OneDrive/mynote/mygingko";
+    model->setRootPath(rootPath);
+    //文件系统的默认icon
+    model->iconProvider()->setOptions(QFileIconProvider::DontUseCustomDirectoryIcons);
+
+    ui->treeView->setModel(model);
+
+    if (!rootPath.isEmpty()) {
+        // QDir::cleanPath 删除多余空格
+        //tree.setRootIndex(model.index(" ...")); 告诉tree去那个index查看数据
+        //qt可能是去整条链加载
+        const QModelIndex rootIndex = model->index(QDir::cleanPath(rootPath));
+        if (rootIndex.isValid())
+            ui->treeView->setRootIndex(rootIndex);
+    }
 
     createActions();
 //    createStatusBar();
@@ -31,11 +55,12 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 void MainWindow::createActions()
 {
-    //menuBar() 系统默认给的Bar
-    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+    //menuBar() 系统默认给的Bar,删除会报错
+    QMenuBar * bar = this->menuBar();
     QToolBar *mainToolBar = this->ui->mainToolBar;
-
-    const QIcon openFolderIcon = QIcon::fromTheme("document-open", QIcon(":/res/images/icon_open_folder.png"));
+    QMenu *fileMenu = bar->addMenu(tr("&File"));
+    //从系统主题中获取图标，后者可以在主题中找不到图标时，再使用自己定义的图标
+    const QIcon openFolderIcon = QIcon::fromTheme("document-open", QIcon(":res/images/icon_folder-open-outline.svg"));
     QAction *openFolderAction = new QAction(openFolderIcon, tr("Open Folder..."), this);
     // QKeySequence类中定义了一套跨平台的快捷键列表。
     //QKeySequence::New在window平台的大多数软件等同于Ctrl+N
@@ -88,7 +113,6 @@ void MainWindow::loadFile(const QString &fileName)
 }
 
 void MainWindow::setCurrentFile(const QString &fileName)
-//! [46] //! [47]
 {
     curFile = fileName;
     textEdit->document()->setModified(false);

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QPlainTextEdit>
+#include <QFileSystemModel>
 
 namespace Ui {
 class MainWindow;
@@ -25,7 +26,7 @@ public:
     //文本框
     QPlainTextEdit *textEdit;
     QString curFile;
-
+    QFileSystemModel *model;
 private:
     Ui::MainWindow *ui;
 };
