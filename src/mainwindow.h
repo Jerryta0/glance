@@ -5,6 +5,9 @@
 #include <QPlainTextEdit>
 #include <QFileSystemModel>
 
+
+#include "custom/foldertreeview.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -27,6 +30,8 @@ public:
     QPlainTextEdit *textEdit;
     QString curFile;
     QFileSystemModel *model;
+    void loadFolderTreeView(FolderTreeView* folderTreeView,const QString& rootPath);
+    FolderTreeView* folderTreeView;
 private:
     Ui::MainWindow *ui;
 };

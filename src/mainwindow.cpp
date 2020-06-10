@@ -21,6 +21,8 @@
 #include "common/systemConsts.h"
 
 
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -28,22 +30,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     resize(widthOfMianWin,heightOfMianWin);
 
-    model = new QFileSystemModel(this);
-    QString rootPath = "D:/OneDrive/mynote/mygingko";
-    model->setRootPath(rootPath);
-    //文件系统的默认icon
-    model->iconProvider()->setOptions(QFileIconProvider::DontUseCustomDirectoryIcons);
-
-    ui->treeView->setModel(model);
-
-    if (!rootPath.isEmpty()) {
-        // QDir::cleanPath 删除多余空格
-        //tree.setRootIndex(model.index(" ...")); 告诉tree去那个index查看数据
-        //qt可能是去整条链加载
-        const QModelIndex rootIndex = model->index(QDir::cleanPath(rootPath));
-        if (rootIndex.isValid())
-            ui->treeView->setRootIndex(rootIndex);
-    }
+    QString rootPath = defaultRootPath;
+    //编程 要一步一步来
+    //F:\gitWs\glance\src\mainwindow.cpp:48: error: expected type-specifier before 'FolderTreeView=               ^~~~~~~~~~~~~~
+    // must use 'class' tag to refer to type  in this scope
+    // https://www.cnblogs.com/Manual-Linux/p/11165861.html  error: must use ‘class’ tag to refer to type ‘XXX’ in this scope
+    // https://blog.csdn.net/fjjaylz/article/details/88744885 关于C++中class关键字的一种特别使用情况
+    folderTreeView = new class FolderTreeView(this);
+    folderTreeView->setGeometry(10,80,300,600);
+    loadFolderTreeView(folderTreeView,rootPath);
 
     createActions();
 //    createStatusBar();
@@ -83,10 +78,12 @@ void MainWindow::openFolder()
 {
     //打开文件夹
     QUrl folderUrl = QFileDialog::getExistingDirectoryUrl(this);
-    //file:///F:/gitWs/glance/make_bin/src/release
+    // folderUrl.url()  "file:///C:/Users/DELL/Documents"
+    //folderUrl.toLocalFile()  "C:/Users/DELL/Documents"
     //如果没有打开文件 返回""
-    qDebug()<< folderUrl.toString();
-
+    qDebug()<<" folderUrl.url() "<< folderUrl.url();
+    qDebug()<<" folderUrl.toLocalFile() "<<folderUrl.toLocalFile();
+    loadFolderTreeView(folderTreeView,folderUrl.toLocalFile());
 }
 
 MainWindow::~MainWindow()
@@ -122,4 +119,33 @@ void MainWindow::setCurrentFile(const QString &fileName)
     if (curFile.isEmpty())
         shownName = "untitled.txt";
     setWindowFilePath(shownName);
+}
+void MainWindow::loadFolderTreeView(FolderTreeView* folderTreeView,const QString& rootPath)
+{
+    model = new QFileSystemModel(this);
+
+    model->setRootPath(rootPath);
+    //文件系统的默认icon
+    model->iconProvider()->setOptions(QFileIconProvider::DontUseCustomDirectoryIcons);
+
+    //4列,删除失败
+    qDebug()<<"model->columnCount()"<< model->columnCount();
+    qDebug()<<"model->removeColumn(1)"<< model->removeColumn(1);
+
+    //不需要show 一样展示
+    folderTreeView->setModel(model);
+    if (!rootPath.isEmpty()) {
+        // QDir::cleanPath 删除多余空格
+        //tree.setRootIndex(model.index(" ...")); 告诉tree去那个index查看数据
+        //qt可能是去整条链加载
+        const QModelIndex rootIndex = model->index(QDir::cleanPath(rootPath));
+        if (rootIndex.isValid())
+            folderTreeView->setRootIndex(rootIndex);
+    }
+    //隐藏
+    folderTreeView->setColumnHidden(1, true);
+    folderTreeView->setColumnHidden(2, true);
+    folderTreeView->setColumnHidden(3, true);
+    folderTreeView->setHeaderHidden(true);
+    folderTreeView->update();
 }

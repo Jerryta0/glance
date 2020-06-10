@@ -26,11 +26,13 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    custom/foldertreeview.cpp
 
 HEADERS += \
         mainwindow.h \
-    common/systemConsts.h
+    common/systemConsts.h \
+    custom/foldertreeview.h
 
 FORMS += \
         mainwindow.ui
