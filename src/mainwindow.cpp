@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     resize(widthOfMianWin,heightOfMianWin);
 
     QString rootPath = defaultRootPath;
-    //这一步直接会显示在页面
+    //这一步直接会显示在页面 ,不需要show 一样展示
     folderTreeView = new FolderTreeView(this);
     folderTreeView->setGeometry(10,80,300,600);
     loadFolderTreeView(folderTreeView,rootPath);
@@ -124,7 +124,7 @@ void MainWindow::loadFolderTreeView(FolderTreeView* folderTreeView,const QString
     //文件系统的默认icon
     model->iconProvider()->setOptions(QFileIconProvider::DontUseCustomDirectoryIcons);
 
-    //不需要show 一样展示
+    //model类型:QAbstractItemModel
     folderTreeView->setModel(model);
     if (!rootPath.isEmpty()) {
         // QDir::cleanPath 删除多余空格
