@@ -7,8 +7,6 @@
 #include <QHBoxLayout>
 #include <QScrollArea>
 #include <QPushButton>
-
-
 #include <QFileSystemModel>
 #include <QFileIconProvider>
 #include <QTreeView>
@@ -20,8 +18,11 @@
 #include "inlib.h"
 #include "common/systemConsts.h"
 
-
-
+void callOutFunction()
+{
+    InLib inLib;
+    inLib.testLib();
+}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -31,7 +32,6 @@ MainWindow::MainWindow(QWidget *parent) :
     resize(widthOfMianWin,heightOfMianWin);
 
     QString rootPath = defaultRootPath;
-    //这一步直接会显示在页面 ,不需要show 一样展示
     folderTreeView = new FolderTreeView(this);
     folderTreeView->setGeometry(10,80,300,600);
     loadFolderTreeView(folderTreeView,rootPath);
@@ -39,16 +39,18 @@ MainWindow::MainWindow(QWidget *parent) :
     createActions();
 //    createStatusBar();
 //    readSettings();
-
-
-//    InLib inLib;
-//    inLib.testLib();
+}
+MainWindow::~MainWindow()
+{
+    delete ui;
 }
 void MainWindow::createActions()
 {
     //menuBar() 系统默认给的Bar,删除会报错
     QMenuBar * bar = this->menuBar();
     QToolBar *mainToolBar = this->ui->mainToolBar;
+
+    //___打开文件QAction___
     QMenu *fileMenu = bar->addMenu(tr("&File"));
     //从系统主题中获取图标，后者可以在主题中找不到图标时，再使用自己定义的图标
     const QIcon openFolderIcon = QIcon::fromTheme("document-open", QIcon(":res/images/icon_folder-open-outline.svg"));
@@ -62,6 +64,8 @@ void MainWindow::createActions()
     mainToolBar->addAction(openFolderAction);
 
     fileMenu->addSeparator();
+
+    //___退出QAction___
     const QIcon exitIcon = QIcon::fromTheme("application-exit");
     QAction *exitAct = fileMenu->addAction(exitIcon, tr("Exit"), this, &QWidget::close);
     exitAct->setShortcuts(QKeySequence::Quit);
@@ -70,28 +74,25 @@ void MainWindow::createActions()
 
 }
 
+//打开文件夹
 void MainWindow::openFolder()
 {
-    //打开文件夹
+    //QFileDialog提供了一个对话框，允许用户选择文件或者目录，
     QUrl folderUrl = QFileDialog::getExistingDirectoryUrl(this);
-    // folderUrl.url()  "file:///C:/Users/DELL/Documents"
-    //folderUrl.toLocalFile()  "C:/Users/DELL/Documents"
     //如果没有打开文件 返回""
-    qDebug()<<" folderUrl.url() "<< folderUrl.url();
+    //"C:/Users/DELL/Documents"
     qDebug()<<" folderUrl.toLocalFile() "<<folderUrl.toLocalFile();
     loadFolderTreeView(folderTreeView,folderUrl.toLocalFile());
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
+
 void MainWindow::loadFile(const QString &fileName)
 {
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         QMessageBox::warning(this, appName,
                              QString("Cannot read file %1:\n%2.")
+                             //toNativeSeparators
                              //把windows下的路径转换为Qt可以识别的路径
                              //如"C:/Users/Administrator/Desktop"------->"C:\Users\Administrator\Desktop"
                              .arg(QDir::toNativeSeparators(fileName), file.errorString()));
@@ -115,6 +116,12 @@ void MainWindow::setCurrentFile(const QString &fileName)
     if (curFile.isEmpty())
         shownName = "untitled.txt";
     setWindowFilePath(shownName);
+    //路径
+    //QString windowFilePath() const
+    //void setWindowFilePath(const QString &filePath)
+    //该属性保存了widget的文件路径。
+    //这个属性只与window有关，它将文件路径和window关联起来。
+    //如果设置了文件路径但是没有设置window的名字，Qt将窗口标题设置为指定的路径文件名，可以调用QFileInfo::fileName()函数来获取。
 }
 void MainWindow::loadFolderTreeView(FolderTreeView* folderTreeView,const QString& rootPath)
 {

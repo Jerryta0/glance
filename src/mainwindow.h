@@ -32,6 +32,7 @@ public:
     QFileSystemModel *model;
     void loadFolderTreeView(FolderTreeView* folderTreeView,const QString& rootPath);
     FolderTreeView* folderTreeView;
+
 private:
     Ui::MainWindow *ui;
 };
