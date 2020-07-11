@@ -1,15 +1,29 @@
-#include <QFile>
-#include <QMessageBox>
-#include <QDir>
-#include <QTextStream>
-#include <QFileDialog>
-#include <QDebug>
+#include <QMenuBar>
+#include <QStatusBar>
+#include <QToolBar>
 #include <QHBoxLayout>
 #include <QScrollArea>
 #include <QPushButton>
 #include <QFileSystemModel>
 #include <QFileIconProvider>
 #include <QTreeView>
+#include <QModelIndex>
+#include <QSplitter>
+
+
+
+#include <QFile>
+#include <QDir>
+#include <QTextStream>
+#include <QFileDialog>
+#include <QVariant>
+
+#include <QJsonDocument>
+#include <QJsonObject>
+
+#include <QMessageBox>
+#include <QDebug>
+
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
@@ -18,11 +32,8 @@
 #include "inlib.h"
 #include "common/systemConsts.h"
 
-void callOutFunction()
-{
-    InLib inLib;
-    inLib.testLib();
-}
+
+void callOutFunction();
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -30,15 +41,116 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     resize(widthOfMianWin,heightOfMianWin);
-
     QString rootPath = defaultRootPath;
-    folderTreeView = new FolderTreeView(this);
-    folderTreeView->setGeometry(10,80,300,600);
+    //为什么留this->ui->centralWidget, 因为本来就是需要一个容器
+    QHBoxLayout* layout = new QHBoxLayout(this->ui->centralWidget);
+    this->centralWidget()->setLayout(layout);
+    //新建主分割窗口，水平分割
+    QSplitter *splitterMain = new QSplitter(Qt::Horizontal, this->ui->centralWidget);
+    //左右, 拉伸边缘的时候,splitterMain会变大
+    layout->addWidget(splitterMain);
+    splitterMain->setGeometry(10,70,this->width(),this->height());
+
+    //设置好parent,就不需要调价layout,再addwidget
+    folderTreeView = new FolderTreeView(splitterMain);
+    folderTreeView->setGeometry(0,0,this->width()/7,this->height());
+    folderTreeView->setMaximumWidth(this->width()/7*2);
+
     loadFolderTreeView(folderTreeView,rootPath);
 
     createActions();
 //    createStatusBar();
 //    readSettings();
+
+    //右分割窗口，并以主分割窗口作为父窗口
+    QSplitter *splitterRight = new QSplitter(Qt::Vertical, splitterMain);
+    //在拖拽分割条时，是否实时更新
+    splitterRight->setOpaqueResize(true);
+    //控件是否可伸缩。第一个参数用于指定控件的序号。第二个函数大于0时，表示控件可伸缩，小于0时，表示控件不可伸缩。
+    //拉伸的时候,拉伸1
+    splitterRight->setStretchFactor(1,1);
+
+    tabWidget = new QTabWidget(splitterRight);
+    splitterRight->addWidget(tabWidget);
+
+    tabWidget->setGeometry(QRect(10,0,this->width()/7*6,this->height()));
+
+//    tabWidget->addTab(new QPushButton("btn1",this),"tab 1");
+//    tabWidget->addTab(new QPushButton("btn2",this),"tab 2");
+
+    //点击事件 void  clicked(const QModelIndex &index)
+    connect(folderTreeView,&QTreeView::clicked,[=](const QModelIndex &index){
+        qDebug()<<index.row()<<index.data()<<index.data().toString();
+
+        //___遍历获得___
+        QStringList filepath;
+        QModelIndex cur = index;
+        while(!cur.data().toString().isEmpty())
+        {
+            //获取itemfile名称
+            filepath<<cur.data().toString();
+            //将itemfile指向父item
+            cur=cur.parent();
+        }
+        QString strpath;
+        //QStringlist类filepath反向存着初始item的路径
+        for(int i=(filepath.size()-1);i>=0;i--)
+        { //将filepath反向输出，相应的加入’/‘
+            strpath+=filepath.at(i);
+            if(i!=0){
+                strpath+="/";
+            }
+        }
+//        qDebug()<<"strpath=="<<strpath;
+    // https://blog.csdn.net/guofu8241260/article/details/22398773
+        //___遍历获得___
+
+        QString filePath =  modelOfFolder->filePath(index);
+        QFile fileOfClick(filePath);
+        QFileInfo fileInfoOfClick(filePath);
+        if(fileInfoOfClick.isFile()){
+           if(fileOfClick.open(QIODevice::WriteOnly)){
+               //tabWidget
+
+           }else{
+               qDebug()<<"加载文件失败 : "<<filePath;
+           }
+        }
+    });
+
+    // 为treeView添加右键菜单
+    folderTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(folderTreeView, &QTreeView::customContextMenuRequested, [=](const QPoint &pos){
+        // 《给QTreeView表项添加右键菜单》：系列教程之四
+        // https://blog.csdn.net/zyhse/article/details/105894442
+        QModelIndex curIndex = folderTreeView->indexAt(pos);
+        // 右键选中了有效index
+        if (curIndex.isValid())
+        {
+            QIcon view = QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation);
+            QIcon test = QApplication::style()->standardIcon(QStyle::SP_DesktopIcon);
+
+            // 创建菜单
+            QMenu menu;
+            menu.addAction(view, tr("look"), [=](){
+                QModelIndex curIndex = folderTreeView->currentIndex();
+                 // sibling同胞 获取同一行第0列
+                QModelIndex index = curIndex.sibling(curIndex.row(), 0);
+                if(index.isValid())
+                {
+                    QMessageBox::information(this, tr("信息"), index.data().toString());
+                }
+            });
+            menu.addSeparator();
+            menu.addAction(test, tr("test"), [=](){
+                qDebug()<<"test";
+            });
+            //菜单位置
+            menu.exec(QCursor::pos());
+        }
+
+    });
+
 }
 MainWindow::~MainWindow()
 {
@@ -48,8 +160,8 @@ void MainWindow::createActions()
 {
     //menuBar() 系统默认给的Bar,删除会报错
     QMenuBar * bar = this->menuBar();
-    QToolBar *mainToolBar = this->ui->mainToolBar;
-
+    QToolBar *mainToolBar = new QToolBar(this);
+    this->addToolBar(Qt::TopToolBarArea, mainToolBar);
     //___打开文件QAction___
     QMenu *fileMenu = bar->addMenu(tr("&File"));
     //从系统主题中获取图标，后者可以在主题中找不到图标时，再使用自己定义的图标
@@ -88,6 +200,12 @@ void MainWindow::openFolder()
 
 void MainWindow::loadFile(const QString &fileName)
 {
+    //解析后缀
+    //如果是txt
+
+
+    //如果是.md
+
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         QMessageBox::warning(this, appName,
@@ -99,9 +217,25 @@ void MainWindow::loadFile(const QString &fileName)
         return;
     }
 
-    //读取文件
-    QTextStream in(&file);
-    textEdit->setPlainText(in.readAll());
+    //todo 读取文件
+    QByteArray json = file. readAll();
+    if(json.isEmpty()){
+        //new jsonObj
+    }
+    QJsonParseError error;
+    QJsonObject jsonObj;
+    const QJsonDocument& jsDoc = QJsonDocument::fromJson(json,&error);
+    if (QJsonParseError::NoError == error.error){
+        if(jsDoc.isObject()){
+            jsonObj = jsDoc.object();
+        }
+        // 在Java中，使用第三方库GSON就可以方便地实现对象和json之间的转换；而C++没有反射机制，所以没有类似的库。
+        // Qt JSON解析生成笔记 https://www.cnblogs.com/buyishi/p/10306551.html
+
+    }else{
+        throw error.errorString();
+    }
+
     setCurrentFile(fileName);
     statusBar()->showMessage(tr("File loaded"), 2000);
 }
@@ -109,7 +243,7 @@ void MainWindow::loadFile(const QString &fileName)
 void MainWindow::setCurrentFile(const QString &fileName)
 {
     curFile = fileName;
-    textEdit->document()->setModified(false);
+
     setWindowModified(false);
 
     QString shownName = curFile;
@@ -125,17 +259,17 @@ void MainWindow::setCurrentFile(const QString &fileName)
 }
 void MainWindow::loadFolderTreeView(FolderTreeView* folderTreeView,const QString& rootPath)
 {
-    model = new QFileSystemModel(this);
+    modelOfFolder = new QFileSystemModel(this);
 
-    model->setRootPath(rootPath);
+    modelOfFolder->setRootPath(rootPath);
     //文件系统的默认icon
-    model->iconProvider()->setOptions(QFileIconProvider::DontUseCustomDirectoryIcons);
+    modelOfFolder->iconProvider()->setOptions(QFileIconProvider::DontUseCustomDirectoryIcons);
 
     //model类型:QAbstractItemModel
-    folderTreeView->setModel(model);
+    folderTreeView->setModel(modelOfFolder);
     if (!rootPath.isEmpty()) {
         // QDir::cleanPath 删除多余空格
-        const QModelIndex rootIndex = model->index(QDir::cleanPath(rootPath));
+        const QModelIndex rootIndex = modelOfFolder->index(QDir::cleanPath(rootPath));
         if (rootIndex.isValid())
             //整条链中,告诉tree去那个index查看数据
             folderTreeView->setRootIndex(rootIndex);
@@ -146,4 +280,10 @@ void MainWindow::loadFolderTreeView(FolderTreeView* folderTreeView,const QString
     folderTreeView->setColumnHidden(3, true);
     //一共4列, model->columnCount() == 4 ,目前只要第一列
     folderTreeView->setHeaderHidden(true);
+}
+
+void callOutFunction()
+{
+    InLib inLib;
+    inLib.testLib();
 }

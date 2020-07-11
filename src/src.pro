@@ -27,12 +27,19 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    custom/foldertreeview.cpp
+    custom/foldertreeview.cpp \
+    bean/mindnodemodel.cpp \
+    bean/jsonfileofmind.cpp \
+    custom/mindnodewidget.cpp
 
 HEADERS += \
         mainwindow.h \
     common/systemConsts.h \
-    custom/foldertreeview.h
+    custom/foldertreeview.h \
+    bean/mindnodemodel.h \
+    bean/jsonfileofmind.h \
+    custom/mindnodewidget.h
+
 
 FORMS += \
         mainwindow.ui

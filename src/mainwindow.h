@@ -17,6 +17,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
+    QString curFile;
+    QFileSystemModel *modelOfFolder;
+    void loadFolderTreeView(FolderTreeView* folderTreeView,const QString& rootPath);
+    FolderTreeView* folderTreeView;
+    QTabWidget* tabWidget;
+
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void createActions();
@@ -26,12 +33,7 @@ public:
     void openFolder();
     void loadFile(const QString &fileName);
     void setCurrentFile(const QString &fileName);
-    //文本框
-    QPlainTextEdit *textEdit;
-    QString curFile;
-    QFileSystemModel *model;
-    void loadFolderTreeView(FolderTreeView* folderTreeView,const QString& rootPath);
-    FolderTreeView* folderTreeView;
+
 
 private:
     Ui::MainWindow *ui;
