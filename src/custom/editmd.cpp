@@ -16,6 +16,7 @@ EditMd::EditMd(QWidget *parent) : QWidget(parent)
 {
     initCtrls(parent);
 
+    //鼠标碰不到
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &QWidget::customContextMenuRequested, [=](const QPoint &pos){
 
@@ -60,32 +61,33 @@ void EditMd::openFile(const QString& _filePath){
 }
 bool EditMd::eventFilter(QObject * obj, QEvent * e) {
      qDebug()<< "EditMd::eventFilter QEvent " <<  e->type();
-    if (obj == showWidget) {
-        if (QEvent::Enter == e->type()) {
-            m_stackWidget->setCurrentWidget(editWidget);
-        }
-        if (e->type() == QEvent::MouseButtonPress)
-        {
-            m_stackWidget->setCurrentWidget(editWidget);
-        }
-    }
-    else if(obj == editWidget) {
-        if (QEvent::Leave == e->type()) {
-            m_stackWidget->setCurrentWidget(showWidget);
-        }
-        if (e->type() == QEvent::MouseButtonDblClick)
-        {
-            m_stackWidget->setCurrentWidget(showWidget);
-        }
-    }
+
     return QWidget::eventFilter(obj, e);
 }
+void EditMd::mouseDoubleClickEvent(QMouseEvent *event){
+    qDebug()<< "EditMd::mouseDoubleClickEvent QMouseEvent " <<  event->button();
 
+    //双击切换
+    if(event->button() == Qt::LeftButton){
+        if(m_stackWidget->currentWidget() == showWidget){
+            m_stackWidget->setCurrentWidget(editWidget);
+        }else{
+            m_stackWidget->setCurrentWidget(showWidget);
+        }
+     }
+    //有菜单就不行
+    if(event->button() == Qt::RightButton){
+        //m_stackWidget->setCurrentWidget(showWidget);
+     }
+}
 void EditMd::initCtrls(QWidget *parent) {
     m_stackWidget = new QStackedWidget(this);
 
     showWidget = new QWebEngineView(this);
     editWidget = new QPlainTextEdit(this);
+    // 设置鼠标穿透 为了 mouseDoubleClickEvent
+    showWidget->setAttribute(Qt::WA_TransparentForMouseEvents);
+    editWidget->setAttribute(Qt::WA_TransparentForMouseEvents);
 
     showWidget->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
 

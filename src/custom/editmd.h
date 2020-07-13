@@ -23,6 +23,7 @@ private:
 public:
     explicit EditMd(QWidget *parent = nullptr);
     bool eventFilter(QObject * obj, QEvent * e);
+    void mouseDoubleClickEvent(QMouseEvent *event);
     void onFileSave();
     void onFileSaveAs();
     void openFile(const QString& _filePath);
