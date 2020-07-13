@@ -31,8 +31,8 @@
 #include "ui_mainwindow.h"
 #include "inlib.h"
 #include "common/systemConsts.h"
-
-
+#include "custom/texteditor.h"
+#include "custom/editmd.h"
 void callOutFunction();
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     resize(widthOfMianWin,heightOfMianWin);
+    defaultQss();
     QString rootPath = defaultRootPath;
     //为什么留this->ui->centralWidget, 因为本来就是需要一个容器
     QHBoxLayout* layout = new QHBoxLayout(this->ui->centralWidget);
@@ -70,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //拉伸的时候,拉伸1
     splitterRight->setStretchFactor(1,1);
 
-    tabWidget = new QTabWidget(splitterRight);
+    tabWidget = new QTabPageWidget(splitterRight);
     splitterRight->addWidget(tabWidget);
 
     tabWidget->setGeometry(QRect(10,0,this->width()/7*6,this->height()));
@@ -109,47 +110,11 @@ MainWindow::MainWindow(QWidget *parent) :
         QFile fileOfClick(filePath);
         QFileInfo fileInfoOfClick(filePath);
         if(fileInfoOfClick.isFile()){
-           if(fileOfClick.open(QIODevice::WriteOnly)){
-               //tabWidget
-
-           }else{
-               qDebug()<<"加载文件失败 : "<<filePath;
-           }
+           loadFile(filePath);
         }
     });
 
-    // 为treeView添加右键菜单
-    folderTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(folderTreeView, &QTreeView::customContextMenuRequested, [=](const QPoint &pos){
-        // 《给QTreeView表项添加右键菜单》：系列教程之四
-        // https://blog.csdn.net/zyhse/article/details/105894442
-        QModelIndex curIndex = folderTreeView->indexAt(pos);
-        // 右键选中了有效index
-        if (curIndex.isValid())
-        {
-            QIcon view = QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation);
-            QIcon test = QApplication::style()->standardIcon(QStyle::SP_DesktopIcon);
 
-            // 创建菜单
-            QMenu menu;
-            menu.addAction(view, tr("look"), [=](){
-                QModelIndex curIndex = folderTreeView->currentIndex();
-                 // sibling同胞 获取同一行第0列
-                QModelIndex index = curIndex.sibling(curIndex.row(), 0);
-                if(index.isValid())
-                {
-                    QMessageBox::information(this, tr("信息"), index.data().toString());
-                }
-            });
-            menu.addSeparator();
-            menu.addAction(test, tr("test"), [=](){
-                qDebug()<<"test";
-            });
-            //菜单位置
-            menu.exec(QCursor::pos());
-        }
-
-    });
 
 }
 MainWindow::~MainWindow()
@@ -198,68 +163,75 @@ void MainWindow::openFolder()
 }
 
 
-void MainWindow::loadFile(const QString &fileName)
+void MainWindow::loadFile(const QString &filePath)
 {
     //解析后缀
     //如果是txt
-
-
-    //如果是.md
-
-    QFile file(fileName);
+    QFileInfo fileInfo(filePath);
+    QFile file(filePath);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         QMessageBox::warning(this, appName,
                              QString("Cannot read file %1:\n%2.")
                              //toNativeSeparators
                              //把windows下的路径转换为Qt可以识别的路径
                              //如"C:/Users/Administrator/Desktop"------->"C:\Users\Administrator\Desktop"
-                             .arg(QDir::toNativeSeparators(fileName), file.errorString()));
+                             .arg(QDir::toNativeSeparators(filePath), file.errorString()));
         return;
     }
-
-    //todo 读取文件
-    QByteArray json = file. readAll();
-    if(json.isEmpty()){
-        //new jsonObj
+    //不区分大小写 ==0 表示相等
+    if(fileInfo.suffix().compare("txt", Qt::CaseInsensitive) == 0){
+        qDebug()<<"txt file";
+        // QPlainTextEdit 不需要 setGeometry
+        TextEditor* txt = new TextEditor(filePath,this);
+        auto readData = file.readAll();
+        qDebug()<<readData;
+        txt->setPlainText(readData);
+        tabWidget->addTabOnly(txt,fileInfo.fileName());
+        connect(txt,&TextEditor::printMsg,[=](const QString& msg){
+            statusBar()->showMessage(tr(msg.toUtf8().data()), timeoutOfPrint);
+        });
     }
-    QJsonParseError error;
-    QJsonObject jsonObj;
-    const QJsonDocument& jsDoc = QJsonDocument::fromJson(json,&error);
-    if (QJsonParseError::NoError == error.error){
-        if(jsDoc.isObject()){
-            jsonObj = jsDoc.object();
+
+    //如果是.md
+    if(fileInfo.suffix().compare(mdSuffix, Qt::CaseInsensitive) == 0){
+        qDebug()<<"md file";
+        file.close();
+        EditMd* editMd = new EditMd(tabWidget);
+        editMd->openFile(filePath);
+        tabWidget->addTabOnly(editMd,fileInfo.fileName());
+    }
+
+
+    if(fileInfo.suffix().compare(gmindSuffix, Qt::CaseInsensitive) == 0){
+        qDebug()<<"gmind file";
+        //todo 读取文件
+        QByteArray json = file. readAll();
+        if(json.isEmpty()){
+            //new jsonObj
         }
-        // 在Java中，使用第三方库GSON就可以方便地实现对象和json之间的转换；而C++没有反射机制，所以没有类似的库。
-        // Qt JSON解析生成笔记 https://www.cnblogs.com/buyishi/p/10306551.html
+        QJsonParseError error;
+        QJsonObject jsonObj;
+        const QJsonDocument& jsDoc = QJsonDocument::fromJson(json,&error);
+        if (QJsonParseError::NoError == error.error){
+            if(jsDoc.isObject()){
+                jsonObj = jsDoc.object();
+            }
+            // 在Java中，使用第三方库GSON就可以方便地实现对象和json之间的转换；而C++没有反射机制，所以没有类似的库。
+            // Qt JSON解析生成笔记 https://www.cnblogs.com/buyishi/p/10306551.html
 
-    }else{
-        throw error.errorString();
+        }else{
+            throw error.errorString();
+        }
     }
-
-    setCurrentFile(fileName);
-    statusBar()->showMessage(tr("File loaded"), 2000);
+    statusBar()->showMessage(tr("File loaded"), timeoutOfPrint);
 }
 
-void MainWindow::setCurrentFile(const QString &fileName)
-{
-    curFile = fileName;
 
-    setWindowModified(false);
-
-    QString shownName = curFile;
-    if (curFile.isEmpty())
-        shownName = "untitled.txt";
-    setWindowFilePath(shownName);
-    //路径
-    //QString windowFilePath() const
-    //void setWindowFilePath(const QString &filePath)
-    //该属性保存了widget的文件路径。
-    //这个属性只与window有关，它将文件路径和window关联起来。
-    //如果设置了文件路径但是没有设置window的名字，Qt将窗口标题设置为指定的路径文件名，可以调用QFileInfo::fileName()函数来获取。
-}
 void MainWindow::loadFolderTreeView(FolderTreeView* folderTreeView,const QString& rootPath)
 {
     modelOfFolder = new QFileSystemModel(this);
+    //图标
+//    modelOfFolder->iconProvider()
 
     modelOfFolder->setRootPath(rootPath);
     //文件系统的默认icon
@@ -280,6 +252,17 @@ void MainWindow::loadFolderTreeView(FolderTreeView* folderTreeView,const QString
     folderTreeView->setColumnHidden(3, true);
     //一共4列, model->columnCount() == 4 ,目前只要第一列
     folderTreeView->setHeaderHidden(true);
+}
+void MainWindow::defaultQss()
+{
+    QFile qssfile(":/res/style/dark-orange.qss");
+    if(qssfile.open(QFile::ReadOnly)){
+        QString qss = qssfile.readAll();
+        this->setStyleSheet(qss);
+    }else{
+        qDebug()<<"style file open fail";
+    }
+    qssfile.close();
 }
 
 void callOutFunction()

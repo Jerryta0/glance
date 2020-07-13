@@ -3,7 +3,7 @@
 #include <QTranslator>
 #include <QDebug>
 #include <QStringList>
-
+#include <QTextCodec>
 #include "mainwindow.h"
 #include "common/systemConsts.h"
 
@@ -53,12 +53,16 @@ void readCommand(const QApplication& app,MainWindow& mainWin)
         qDebug()<<parser.positionalArguments().first();
         mainWin.loadFile(parser.positionalArguments().first());
     }
-
 }
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    //控件高清适配
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    //解决 QPlainTextEdit 乱码问题
+    QTextCodec *codec = QTextCodec::codecForName("utf8");
+    QTextCodec::setCodecForLocale(codec);
 
     translate(app);
     setBasicInfo();

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui webenginewidgets webchannel
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,6 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    bean/document.cpp \
+    custom/editmd.cpp \
+    custom/previewpage.cpp \
+    custom/qtabpagewidget.cpp \
+    custom/texteditor.cpp \
         main.cpp \
         mainwindow.cpp \
     custom/foldertreeview.cpp \
@@ -33,6 +38,11 @@ SOURCES += \
     custom/mindnodewidget.cpp
 
 HEADERS += \
+    bean/document.h \
+    custom/editmd.h \
+    custom/previewpage.h \
+    custom/qtabpagewidget.h \
+    custom/texteditor.h \
         mainwindow.h \
     common/systemConsts.h \
     custom/foldertreeview.h \
@@ -63,5 +73,7 @@ RESOURCES += \
 
 # 国际化
 TRANSLATIONS = myI18N_zh_CN.ts
+
+DISTFILES +=
 
 

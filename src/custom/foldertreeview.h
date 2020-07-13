@@ -10,6 +10,8 @@ class FolderTreeView : public QTreeView
 public:
     explicit FolderTreeView(QWidget *parent = nullptr);
 
+    void defaultSetting();
+
 signals:
 
 public slots:

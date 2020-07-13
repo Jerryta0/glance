@@ -5,7 +5,7 @@
 #include <QPlainTextEdit>
 #include <QFileSystemModel>
 
-
+#include "custom/qtabpagewidget.h"
 #include "custom/foldertreeview.h"
 
 namespace Ui {
@@ -22,7 +22,7 @@ public:
     QFileSystemModel *modelOfFolder;
     void loadFolderTreeView(FolderTreeView* folderTreeView,const QString& rootPath);
     FolderTreeView* folderTreeView;
-    QTabWidget* tabWidget;
+    QTabPageWidget* tabWidget;
 
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -32,7 +32,7 @@ public:
     void writeSettings();
     void openFolder();
     void loadFile(const QString &fileName);
-    void setCurrentFile(const QString &fileName);
+    void defaultQss();
 
 
 private:
