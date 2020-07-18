@@ -1,6 +1,6 @@
 #ifndef JSONFILEOFMIND_H
 #define JSONFILEOFMIND_H
-#include "mindnodemodel.h"
+#include "MindNodeModel.h"
 #include <QObject>
 
 //qt中怎么添加文件夹

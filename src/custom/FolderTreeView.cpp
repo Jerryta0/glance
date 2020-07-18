@@ -1,4 +1,4 @@
-#include "foldertreeview.h"
+#include "FolderTreeView.h"
 #include <QApplication>
 #include <QMenu>
 #include <QMessageBox>

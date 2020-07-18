@@ -27,12 +27,15 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include "ui_mainwindow.h"
 #include "inlib.h"
 #include "common/systemConsts.h"
-#include "custom/texteditor.h"
-#include "custom/editmd.h"
+#include "custom/TextEditor.h"
+#include "custom/EditMd.h"
+#include "custom/MindNodeWidget.h"
+#include "custom/MindScrollArea.h"
+
 void callOutFunction();
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -200,28 +203,34 @@ void MainWindow::loadFile(const QString &filePath)
         editMd->openFile(filePath);
         tabWidget->addTabOnly(editMd,fileInfo.fileName());
     }
-
-
+    //如果是gmind
     if(fileInfo.suffix().compare(gmindSuffix, Qt::CaseInsensitive) == 0){
         qDebug()<<"gmind file";
         //todo 读取文件
         QByteArray json = file. readAll();
+        MindScrollArea * mindArea = new MindScrollArea(this);
+
+        tabWidget->addTabOnly(mindArea,fileInfo.fileName());
         if(json.isEmpty()){
             //new jsonObj
-        }
-        QJsonParseError error;
-        QJsonObject jsonObj;
-        const QJsonDocument& jsDoc = QJsonDocument::fromJson(json,&error);
-        if (QJsonParseError::NoError == error.error){
-            if(jsDoc.isObject()){
-                jsonObj = jsDoc.object();
-            }
-            // 在Java中，使用第三方库GSON就可以方便地实现对象和json之间的转换；而C++没有反射机制，所以没有类似的库。
-            // Qt JSON解析生成笔记 https://www.cnblogs.com/buyishi/p/10306551.html
-
         }else{
-            throw error.errorString();
+            //todo
+            return;
+            QJsonParseError error;
+            QJsonObject jsonObj;
+            const QJsonDocument& jsDoc = QJsonDocument::fromJson(json,&error);
+            if (QJsonParseError::NoError == error.error){
+                if(jsDoc.isObject()){
+                    jsonObj = jsDoc.object();
+                }
+                // 在Java中，使用第三方库GSON就可以方便地实现对象和json之间的转换；而C++没有反射机制，所以没有类似的库。
+                // Qt JSON解析生成笔记 https://www.cnblogs.com/buyishi/p/10306551.html
+
+            }else{
+                throw error.errorString();
+            }
         }
+
     }
     statusBar()->showMessage(tr("File loaded"), timeoutOfPrint);
 }
@@ -255,7 +264,8 @@ void MainWindow::loadFolderTreeView(FolderTreeView* folderTreeView,const QString
 }
 void MainWindow::defaultQss()
 {
-    QFile qssfile(":/res/style/dark-orange.qss");
+    //dark-orange
+    QFile qssfile(":/res/style/mySt.qss");
     if(qssfile.open(QFile::ReadOnly)){
         QString qss = qssfile.readAll();
         this->setStyleSheet(qss);

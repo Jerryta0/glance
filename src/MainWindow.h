@@ -5,8 +5,8 @@
 #include <QPlainTextEdit>
 #include <QFileSystemModel>
 
-#include "custom/qtabpagewidget.h"
-#include "custom/foldertreeview.h"
+#include "custom/QTabPageWidget.h"
+#include "custom/FolderTreeView.h"
 
 namespace Ui {
 class MainWindow;

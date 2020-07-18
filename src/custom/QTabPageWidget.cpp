@@ -1,4 +1,4 @@
-#include "qtabpagewidget.h"
+#include "QTabPageWidget.h"
 
 #include <QApplication>
 #include <QMenu>

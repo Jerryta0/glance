@@ -1,4 +1,4 @@
-#include "bean/mindnodemodel.h"
+#include "bean/MindNodeModel.h"
 
 MindNodeModel::MindNodeModel()
 {

@@ -1,5 +1,5 @@
-#include "editmd.h"
-#include "previewpage.h"
+#include "EditMd.h"
+#include "PreviewPage.h"
 #include <QWebChannel>
 #include <QEvent>
 #include <QAction>

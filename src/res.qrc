@@ -18,5 +18,6 @@
         <file>res/md-it/3rdparty/katex.min.js</file>
         <file>res/md-it/3rdparty/texmath.min.css</file>
         <file>res/md-it/3rdparty/texmath.min.js</file>
+        <file>res/style/mySt.qss</file>
     </qresource>
 </RCC>

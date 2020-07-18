@@ -1,4 +1,4 @@
-#include "bean/jsonfileofmind.h"
+#include "bean/JsonFileOfMind.h"
 
 JsonFileOfMind::JsonFileOfMind()
 {

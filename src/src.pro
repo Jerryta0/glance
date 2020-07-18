@@ -25,30 +25,36 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    MainWindow.cpp \
+    bean/JsonFileOfMind.cpp \
+    bean/MindNodeModel.cpp \
     bean/document.cpp \
-    custom/editmd.cpp \
-    custom/previewpage.cpp \
-    custom/qtabpagewidget.cpp \
-    custom/texteditor.cpp \
+    custom/EditMd.cpp \
+    custom/FolderTreeView.cpp \
+    custom/MdGraphicsTextItem.cpp \
+    custom/PreviewPage.cpp \
+    custom/QTabPageWidget.cpp \
+    custom/TextEditor.cpp \
+    custom/mdgraphicsview.cpp \
+    custom/mindscrollarea.cpp \
         main.cpp \
-        mainwindow.cpp \
-    custom/foldertreeview.cpp \
-    bean/mindnodemodel.cpp \
-    bean/jsonfileofmind.cpp \
     custom/mindnodewidget.cpp
 
 HEADERS += \
+    MainWindow.h \
+    bean/JsonFileOfMind.h \
+    bean/MindNodeModel.h \
     bean/document.h \
-    custom/editmd.h \
-    custom/previewpage.h \
-    custom/qtabpagewidget.h \
-    custom/texteditor.h \
-        mainwindow.h \
-    common/systemConsts.h \
-    custom/foldertreeview.h \
-    bean/mindnodemodel.h \
-    bean/jsonfileofmind.h \
-    custom/mindnodewidget.h
+    custom/EditMd.h \
+    custom/FolderTreeView.h \
+    custom/MdGraphicsTextItem.h \
+    custom/MdGraphicsView.h \
+    custom/MindNodeWidget.h \
+    custom/MindScrollArea.h \
+    custom/PreviewPage.h \
+    custom/QTabPageWidget.h \
+    custom/TextEditor.h \
+    common/systemConsts.h
 
 
 FORMS += \

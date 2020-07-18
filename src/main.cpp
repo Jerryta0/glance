@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QStringList>
 #include <QTextCodec>
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include "common/systemConsts.h"
 
 void translate(const QApplication& app)

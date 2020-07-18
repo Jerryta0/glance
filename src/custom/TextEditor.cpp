@@ -1,4 +1,4 @@
-#include "texteditor.h"
+#include "TextEditor.h"
 
 #include <QApplication>
 #include <QMenu>

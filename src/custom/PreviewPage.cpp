@@ -1,4 +1,4 @@
-#include "previewpage.h"
+#include "PreviewPage.h"
 
 #include <QDesktopServices>
 
