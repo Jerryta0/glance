@@ -35,7 +35,7 @@
 #include "custom/MdStackedEditor.h"
 #include "custom/MindNodeWidget.h"
 #include "custom/MindScrollArea.h"
-
+#include "custom/MindGraphicsView.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -207,7 +207,10 @@ void MainWindow::loadFile(const QString &filePath)
         qDebug()<<"gmind file";
         //todo 读取文件
         QByteArray json = file. readAll();
-        MindScrollArea * mindArea = new MindScrollArea(this);
+        MindGraphicsView * mindArea = new MindGraphicsView(this);
+
+        //以前使用布局的mindmap
+//        MindScrollArea * mindArea = new MindScrollArea(this);
 
         tabWidget->addTabOnly(mindArea,fileInfo.fileName());
         if(json.isEmpty()){
