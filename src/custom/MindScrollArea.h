@@ -3,6 +3,12 @@
 
 #include <QScrollArea>
 #include "MindNodeWidget.h"
+
+/**
+* @author taojiayu
+* @date 2020-07-19
+* @desc MindNodeWidget的父
+*/
 class MindScrollArea : public QScrollArea
 {
     Q_OBJECT

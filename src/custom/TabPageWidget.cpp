@@ -1,4 +1,4 @@
-#include "QTabPageWidget.h"
+#include "TabPageWidget.h"
 
 #include <QApplication>
 #include <QMenu>
@@ -7,11 +7,11 @@
 #include <QStyle>
 #include <QFile>
 
-QTabPageWidget::QTabPageWidget(QWidget *parent) : QTabWidget(parent)
+TabPageWidget::TabPageWidget(QWidget *parent) : QTabWidget(parent)
 {
     defaultSetting();
 }
-void QTabPageWidget::defaultSetting()
+void TabPageWidget::defaultSetting()
 {
     //开启可关闭
     this->setTabsClosable(true);
@@ -47,7 +47,7 @@ void QTabPageWidget::defaultSetting()
     });
 }
 
-int QTabPageWidget::addTabOnly(QWidget *widget, const QString &tabName){
+int TabPageWidget::addTabOnly(QWidget *widget, const QString &tabName){
     // 循环查找tab页
     for (int i = 0; i < this->count(); ++i)
     {

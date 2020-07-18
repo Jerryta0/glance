@@ -4,6 +4,12 @@
 #include <QWidget>
 #include <QPlainTextEdit>
 #include <QVBoxLayout>
+
+/**
+* @author taojiayu
+* @date 2020-07-19
+* @desc 使用布局的mind
+*/
 class MindNodeWidget : public QWidget
 {
     Q_OBJECT

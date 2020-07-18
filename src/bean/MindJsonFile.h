@@ -6,11 +6,11 @@
 //qt中怎么添加文件夹
 //1.在外面新建文件夹
 //创建cpp文件在这个文件夹
-class JsonFileOfMind
+class MindJsonFile
 {
 public:
     MindNodeModel root;
-    JsonFileOfMind();
+    MindJsonFile();
 };
 
 #endif // JSONFILEOFMIND_H

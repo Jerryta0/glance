@@ -7,7 +7,12 @@
 #include <QTextEdit>
 #include <QString>
 
-class EditMd : public QWidget
+/**
+* @author taojiayu
+* @date 2020-07-19
+* @desc md文件的切换控件
+*/
+class MdStackedEditor : public QWidget
 {
     Q_OBJECT
 private:
@@ -25,7 +30,7 @@ private:
     void initMenu();
     void initCtrls(QWidget *parent);
 public:
-    explicit EditMd(QWidget *parent = nullptr);
+    explicit MdStackedEditor(QWidget *parent = nullptr);
     void onFileSave();
     void onFileSaveAs();
     void openFile(const QString& _filePath);

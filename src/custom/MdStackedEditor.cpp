@@ -1,4 +1,4 @@
-#include "EditMd.h"
+#include "MdStackedEditor.h"
 #include "hoedown.h"
 
 #include <QEvent>
@@ -15,7 +15,7 @@
 #include <QDebug>
 #include "common/GolbalVar.h"
 extern Hoedown hoedown;
-EditMd::EditMd(QWidget *parent) : QWidget(parent)
+MdStackedEditor::MdStackedEditor(QWidget *parent) : QWidget(parent)
 {
     init();
     initCtrls(parent);
@@ -43,7 +43,7 @@ EditMd::EditMd(QWidget *parent) : QWidget(parent)
         showWidget->setHtml(htmlStr);
     });
 }
-void EditMd::openFile(const QString& _filePath){
+void MdStackedEditor::openFile(const QString& _filePath){
     m_filePath = _filePath;
 
     QFile defaultTextFile(_filePath);
@@ -54,7 +54,7 @@ void EditMd::openFile(const QString& _filePath){
 ////     qDebug()<< "EditMd::eventFilter QEvent " <<  e->type();
 //    return QWidget::eventFilter(obj, e);
 //}
-void EditMd::mouseDoubleClickEvent(QMouseEvent *event){
+void MdStackedEditor::mouseDoubleClickEvent(QMouseEvent *event){
 //    qDebug()<< "EditMd::mouseDoubleClickEvent QMouseEvent " <<  event->button();
 
     //双击切换
@@ -75,7 +75,7 @@ void EditMd::mouseDoubleClickEvent(QMouseEvent *event){
         //m_stackWidget->setCurrentWidget(showWidget);
      }
 }
-void EditMd::init()
+void MdStackedEditor::init()
 {
     m_stackWidget = new QStackedWidget(this);
     showWidget = new QTextEdit(m_stackWidget);
@@ -83,7 +83,7 @@ void EditMd::init()
     editWidget->document()->setModified(true);
 }
 
-void EditMd::initMenu()
+void MdStackedEditor::initMenu()
 {
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &QWidget::customContextMenuRequested, [=](const QPoint &pos){
@@ -106,7 +106,7 @@ void EditMd::initMenu()
     });
 }
 
-void EditMd::initCtrls(QWidget *parent) {
+void MdStackedEditor::initCtrls(QWidget *parent) {
 
     // 设置鼠标穿透 为了 mouseDoubleClickEvent
     showWidget->setAttribute(Qt::WA_TransparentForMouseEvents);
@@ -128,7 +128,7 @@ void EditMd::initCtrls(QWidget *parent) {
     m_stackWidget->setCurrentWidget(showWidget);
 
 }
-void EditMd::onFileSaveAs()
+void MdStackedEditor::onFileSaveAs()
 {
     QString path = QFileDialog::getSaveFileName(this,
         tr("Save MarkDown File"), "", tr("MarkDown File (*.md, *.markdown)"));
@@ -137,7 +137,7 @@ void EditMd::onFileSaveAs()
     m_filePath = path;
     onFileSave();
 }
-void EditMd::onFileSave()
+void MdStackedEditor::onFileSave()
 {
     if (m_filePath.isEmpty()) {
         onFileSaveAs();

@@ -1,4 +1,4 @@
-#include "TextEditor.h"
+#include "TxtEditor.h"
 
 #include <QApplication>
 #include <QMenu>
@@ -7,16 +7,16 @@
 #include <QStyle>
 #include <QFile>
 #include <QShortcut>
-TextEditor::TextEditor(QWidget *parent) : QPlainTextEdit(parent)
+TxtEditor::TxtEditor(QWidget *parent) : QPlainTextEdit(parent)
 {
     defaultSetting();
 }
-TextEditor::TextEditor(const QString& _filePath,QWidget *parent):TextEditor(parent){
+TxtEditor::TxtEditor(const QString& _filePath,QWidget *parent):TxtEditor(parent){
     filePath = _filePath;
 }
 
 
-void TextEditor::defaultSetting()
+void TxtEditor::defaultSetting()
 {
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &QWidget::customContextMenuRequested, [=](const QPoint &pos){
@@ -45,9 +45,9 @@ void TextEditor::defaultSetting()
     //设置是否会自动反复按键.
     saveCut->setAutoRepeat(false);
     //连接信号与槽，showSlot()是自定义的槽函数!
-    connect(saveCut, &QShortcut::activated, this, &TextEditor::saveFile);
+    connect(saveCut, &QShortcut::activated, this, &TxtEditor::saveFile);
 }
-void TextEditor::saveFile(){
+void TxtEditor::saveFile(){
     if(m_isTextChanged){
         return;
     }
@@ -67,7 +67,7 @@ void TextEditor::saveFile(){
     emit printMsg(QString("save file : %1").arg(filePath));
 }
 
-void TextEditor::wheelEvent(QWheelEvent *event)
+void TxtEditor::wheelEvent(QWheelEvent *event)
 {
     qDebug() << "wheel";
     if ( QApplication::keyboardModifiers () == Qt::ControlModifier)

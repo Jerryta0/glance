@@ -3,6 +3,11 @@
 
 #include <QPlainTextEdit>
 #include <QStackedWidget>
+/**
+* @author taojiayu
+* @date 2020-07-19
+* @desc md的纯文本
+*/
 class MdPlainTextEdit : public QPlainTextEdit
 {
     Q_OBJECT

@@ -3,7 +3,11 @@
 
 #include <QTreeView>
 
-
+/**
+* @author taojiayu
+* @date 2020-07-19
+* @desc 文件树
+*/
 class FolderTreeView : public QTreeView
 {
     Q_OBJECT

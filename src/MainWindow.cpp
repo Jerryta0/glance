@@ -30,9 +30,9 @@
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
 
-#include "common/systemConsts.h"
-#include "custom/TextEditor.h"
-#include "custom/EditMd.h"
+#include "common/SystemConsts.h"
+#include "custom/TxtEditor.h"
+#include "custom/MdStackedEditor.h"
 #include "custom/MindNodeWidget.h"
 #include "custom/MindScrollArea.h"
 
@@ -73,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //拉伸的时候,拉伸1
     splitterRight->setStretchFactor(1,1);
 
-    tabWidget = new QTabPageWidget(splitterRight);
+    tabWidget = new TabPageWidget(splitterRight);
     splitterRight->addWidget(tabWidget);
 
     tabWidget->setGeometry(QRect(10,0,this->width()/7*6,this->height()));
@@ -184,12 +184,12 @@ void MainWindow::loadFile(const QString &filePath)
     if(fileInfo.suffix().compare("txt", Qt::CaseInsensitive) == 0){
         qDebug()<<"txt file";
         // QPlainTextEdit 不需要 setGeometry
-        TextEditor* txt = new TextEditor(filePath,this);
+        TxtEditor* txt = new TxtEditor(filePath,this);
         auto readData = file.readAll();
         qDebug()<<readData;
         txt->setPlainText(readData);
         tabWidget->addTabOnly(txt,fileInfo.fileName());
-        connect(txt,&TextEditor::printMsg,[=](const QString& msg){
+        connect(txt,&TxtEditor::printMsg,[=](const QString& msg){
             statusBar()->showMessage(tr(msg.toUtf8().data()), timeoutOfPrint);
         });
     }
@@ -198,7 +198,7 @@ void MainWindow::loadFile(const QString &filePath)
     if(fileInfo.suffix().compare(mdSuffix, Qt::CaseInsensitive) == 0){
         qDebug()<<"md file";
         file.close();
-        EditMd* editMd = new EditMd(tabWidget);
+        MdStackedEditor* editMd = new MdStackedEditor(tabWidget);
         editMd->openFile(filePath);
         tabWidget->addTabOnly(editMd,fileInfo.fileName());
     }

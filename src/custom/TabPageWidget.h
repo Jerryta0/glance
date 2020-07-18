@@ -4,11 +4,16 @@
 #include <QWidget>
 #include <QTabWidget>
 
-class QTabPageWidget : public QTabWidget
+/**
+* @author taojiayu
+* @date 2020-07-19
+* @desc tab控件
+*/
+class TabPageWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit QTabPageWidget(QWidget *parent = nullptr);
+    explicit TabPageWidget(QWidget *parent = nullptr);
     //默认设置
     void defaultSetting();
     //只添加一次

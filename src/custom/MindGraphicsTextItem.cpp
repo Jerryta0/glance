@@ -1,10 +1,10 @@
-#include "MdGraphicsTextItem.h"
+#include "MindGraphicsTextItem.h"
 #include <QAbstractTextDocumentLayout>
-MdGraphicsTextItem::MdGraphicsTextItem(QGraphicsItem *parent) : QGraphicsTextItem(parent)
+MindGraphicsTextItem::MindGraphicsTextItem(QGraphicsItem *parent) : QGraphicsTextItem(parent)
 {
 
 }
-void MdGraphicsTextItem::adJustSize(){
+void MindGraphicsTextItem::adJustSize(){
     //获得文档的高度
     QTextDocument *doc= this->document();
     QAbstractTextDocumentLayout *layout = doc->documentLayout();

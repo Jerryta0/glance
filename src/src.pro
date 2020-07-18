@@ -26,35 +26,35 @@ CONFIG += c++11
 
 SOURCES += \
     MainWindow.cpp \
-    bean/JsonFileOfMind.cpp \
+    bean/MindJsonFile.cpp \
     bean/MindNodeModel.cpp \
     common/GolbalVar.cpp \
-    custom/EditMd.cpp \
     custom/FolderTreeView.cpp \
-    custom/MdGraphicsTextItem.cpp \
     custom/MdPlainTextEdit.cpp \
+    custom/MdStackedEditor.cpp \
+    custom/MindGraphicsTextItem.cpp \
+    custom/MindGraphicsView.cpp \
     custom/MindNodeWidget.cpp \
     custom/MindScrollArea.cpp \
-    custom/QTabPageWidget.cpp \
-    custom/TextEditor.cpp \
-    custom/mdgraphicsview.cpp \
+    custom/TabPageWidget.cpp \
+    custom/TxtEditor.cpp \
         main.cpp
 
 HEADERS += \
     MainWindow.h \
-    bean/JsonFileOfMind.h \
+    bean/MindJsonFile.h \
     bean/MindNodeModel.h \
     common/GolbalVar.h \
-    custom/EditMd.h \
+    common/SystemConsts.h \
     custom/FolderTreeView.h \
-    custom/MdGraphicsTextItem.h \
-    custom/MdGraphicsView.h \
     custom/MdPlainTextEdit.h \
+    custom/MdStackedEditor.h \
+    custom/MindGraphicsTextItem.h \
+    custom/MindGraphicsView.h \
     custom/MindNodeWidget.h \
     custom/MindScrollArea.h \
-    custom/QTabPageWidget.h \
-    custom/TextEditor.h \
-    common/systemConsts.h
+    custom/TabPageWidget.h \
+    custom/TxtEditor.h
 
 
 FORMS += \
