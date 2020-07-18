@@ -32,6 +32,7 @@ SOURCES += \
     custom/EditMd.cpp \
     custom/FolderTreeView.cpp \
     custom/MdGraphicsTextItem.cpp \
+    custom/MdPlainTextEdit.cpp \
     custom/MindNodeWidget.cpp \
     custom/MindScrollArea.cpp \
     custom/QTabPageWidget.cpp \
@@ -48,6 +49,7 @@ HEADERS += \
     custom/FolderTreeView.h \
     custom/MdGraphicsTextItem.h \
     custom/MdGraphicsView.h \
+    custom/MdPlainTextEdit.h \
     custom/MindNodeWidget.h \
     custom/MindScrollArea.h \
     custom/QTabPageWidget.h \

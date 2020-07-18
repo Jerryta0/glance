@@ -10,6 +10,8 @@
 #include <QDir>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QShortcut>
+
 #include <QDebug>
 #include "common/GolbalVar.h"
 extern Hoedown hoedown;
@@ -48,10 +50,10 @@ void EditMd::openFile(const QString& _filePath){
     qDebug()<< "EditMd::openFile : " <<defaultTextFile.open(QIODevice::ReadOnly);
     editWidget->setPlainText(defaultTextFile.readAll());
 }
-bool EditMd::eventFilter(QObject * obj, QEvent * e) {
-//     qDebug()<< "EditMd::eventFilter QEvent " <<  e->type();
-    return QWidget::eventFilter(obj, e);
-}
+//bool EditMd::eventFilter(QObject * obj, QEvent * e) {
+////     qDebug()<< "EditMd::eventFilter QEvent " <<  e->type();
+//    return QWidget::eventFilter(obj, e);
+//}
 void EditMd::mouseDoubleClickEvent(QMouseEvent *event){
 //    qDebug()<< "EditMd::mouseDoubleClickEvent QMouseEvent " <<  event->button();
 
@@ -59,8 +61,13 @@ void EditMd::mouseDoubleClickEvent(QMouseEvent *event){
     if(event->button() == Qt::LeftButton){
         if(m_stackWidget->currentWidget() == showWidget){
             m_stackWidget->setCurrentWidget(editWidget);
+            //可以获得焦点 就是输入框
+//            editWidget->setFocus();
         }else{
             m_stackWidget->setCurrentWidget(showWidget);
+
+            //页面还是可以显示
+//            showWidget->document()->setModified(true);
         }
      }
     //有菜单就不行
@@ -71,8 +78,9 @@ void EditMd::mouseDoubleClickEvent(QMouseEvent *event){
 void EditMd::init()
 {
     m_stackWidget = new QStackedWidget(this);
-    showWidget = new QTextEdit(this);
-    editWidget = new QPlainTextEdit(this);
+    showWidget = new QTextEdit(m_stackWidget);
+    editWidget = new MdPlainTextEdit(m_stackWidget);
+    editWidget->document()->setModified(true);
 }
 
 void EditMd::initMenu()
@@ -99,10 +107,13 @@ void EditMd::initMenu()
 }
 
 void EditMd::initCtrls(QWidget *parent) {
+
     // 设置鼠标穿透 为了 mouseDoubleClickEvent
     showWidget->setAttribute(Qt::WA_TransparentForMouseEvents);
-    editWidget->setAttribute(Qt::WA_TransparentForMouseEvents);
+    //子在上,父在下,无法用鼠标移动光标
+//    editWidget->setAttribute(Qt::WA_TransparentForMouseEvents);
 
+    //获取焦点
     showWidget->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
     m_stackWidget->setGeometry(0, 0, parent->width(),parent->height());
 
@@ -110,11 +121,12 @@ void EditMd::initCtrls(QWidget *parent) {
     editWidget->setGeometry(0, 0, parent->width(),parent->height());
     //父类处理
     showWidget->installEventFilter(this);
-    editWidget->installEventFilter(this);
+//    editWidget->installEventFilter(this);
 
     m_stackWidget->addWidget(showWidget);
     m_stackWidget->addWidget(editWidget);
     m_stackWidget->setCurrentWidget(showWidget);
+
 }
 void EditMd::onFileSaveAs()
 {

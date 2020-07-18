@@ -1,6 +1,6 @@
 #ifndef EDITMD_H
 #define EDITMD_H
-
+#include "MdPlainTextEdit.h"
 #include <QWidget>
 #include <QStackedWidget>
 #include <QPlainTextEdit>
@@ -21,19 +21,17 @@ private:
 
     QString m_content;
     QString m_filePath;
-
+    void init();
+    void initMenu();
     void initCtrls(QWidget *parent);
 public:
     explicit EditMd(QWidget *parent = nullptr);
-    bool eventFilter(QObject * obj, QEvent * e);
-    void mouseDoubleClickEvent(QMouseEvent *event);
     void onFileSave();
     void onFileSaveAs();
     void openFile(const QString& _filePath);
-    void init();
 
-    void initMenu();
-
+//    bool eventFilter(QObject * obj, QEvent * e);
+    void mouseDoubleClickEvent(QMouseEvent *event);
 signals:
 
 };
