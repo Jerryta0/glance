@@ -29,14 +29,13 @@
 
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
-#include "inlib.h"
+
 #include "common/systemConsts.h"
 #include "custom/TextEditor.h"
 #include "custom/EditMd.h"
 #include "custom/MindNodeWidget.h"
 #include "custom/MindScrollArea.h"
 
-void callOutFunction();
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -275,8 +274,3 @@ void MainWindow::defaultQss()
     qssfile.close();
 }
 
-void callOutFunction()
-{
-    InLib inLib;
-    inLib.testLib();
-}

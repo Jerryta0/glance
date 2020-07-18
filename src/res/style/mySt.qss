@@ -1,19 +1,14 @@
 QTabBar::close-button {
     image:null
 }
-
 QTabBar::close-button:selected {
-    image: url(:/res/images/close-outline-white.svg)
+    image: url(:/res/images/close-outline.svg)
 }
 QTabBar::close-button:selected:hover {
-    image: url(:/res/images/close-outline-white.svg)
+    image: url(:/res/images/close-outline.svg)
     background-color:gray;
 }
-
-
-//background-color:transparent;
-//color:gray;
-//image:url(:/res/images/close-outline.svg);
 QTabWidget::tab-bar {
     left: 3px;
 }
+

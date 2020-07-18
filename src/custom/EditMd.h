@@ -3,8 +3,6 @@
 
 #include <QWidget>
 #include <QStackedWidget>
-#include "bean/document.h"
-#include <QWebEngineView>
 #include <QPlainTextEdit>
 #include <QTextEdit>
 #include <QString>
@@ -17,15 +15,11 @@ private:
     //编辑
     QPlainTextEdit * editWidget;
     //当前的展示
-    QWidget * currentShowWidget;
-    //展示 showWidgetOfWeb
-    QWebEngineView * showWidget;
-    //不同的实现
-    QTextEdit * showWidgetOfRich;
+    QTextEdit * showWidget;
     //类型
     int type;
 
-    Document m_content;
+    QString m_content;
     QString m_filePath;
 
     void initCtrls(QWidget *parent);
@@ -36,6 +30,10 @@ public:
     void onFileSave();
     void onFileSaveAs();
     void openFile(const QString& _filePath);
+    void init();
+
+    void initMenu();
+
 signals:
 
 };

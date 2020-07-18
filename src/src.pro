@@ -28,30 +28,28 @@ SOURCES += \
     MainWindow.cpp \
     bean/JsonFileOfMind.cpp \
     bean/MindNodeModel.cpp \
-    bean/document.cpp \
+    common/GolbalVar.cpp \
     custom/EditMd.cpp \
     custom/FolderTreeView.cpp \
     custom/MdGraphicsTextItem.cpp \
-    custom/PreviewPage.cpp \
+    custom/MindNodeWidget.cpp \
+    custom/MindScrollArea.cpp \
     custom/QTabPageWidget.cpp \
     custom/TextEditor.cpp \
     custom/mdgraphicsview.cpp \
-    custom/mindscrollarea.cpp \
-        main.cpp \
-    custom/mindnodewidget.cpp
+        main.cpp
 
 HEADERS += \
     MainWindow.h \
     bean/JsonFileOfMind.h \
     bean/MindNodeModel.h \
-    bean/document.h \
+    common/GolbalVar.h \
     custom/EditMd.h \
     custom/FolderTreeView.h \
     custom/MdGraphicsTextItem.h \
     custom/MdGraphicsView.h \
     custom/MindNodeWidget.h \
     custom/MindScrollArea.h \
-    custom/PreviewPage.h \
     custom/QTabPageWidget.h \
     custom/TextEditor.h \
     common/systemConsts.h
@@ -65,13 +63,7 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-# add lib需要的东西
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../inLib/release/ -linLib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../inLib/debug/ -linLib
-else:unix: LIBS += -L$$OUT_PWD/../inLib/ -linLib
 
-INCLUDEPATH += $$PWD/../inLib
-DEPENDPATH += $$PWD/../inLib
 
 RESOURCES += \
     res.qrc
@@ -79,7 +71,14 @@ RESOURCES += \
 
 # 国际化
 TRANSLATIONS = myI18N_zh_CN.ts
-
+# 动态库
 DISTFILES +=
 
 
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/Hoedown/release/ -lHoedown
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib/Hoedown/debug/ -lHoedown
+else:unix: LIBS += -L$$OUT_PWD/../lib/Hoedown/ -lHoedown
+
+INCLUDEPATH += $$PWD/../lib/Hoedown
+DEPENDPATH += $$PWD/../lib/Hoedown

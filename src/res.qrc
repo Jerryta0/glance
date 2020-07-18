@@ -5,19 +5,7 @@
         <file>res/style/dark-orange.qss</file>
         <file>res/images/close-outline.svg</file>
         <file>res/images/close-outline-white.svg</file>
-        <file>res/md/default.md</file>
-        <file>res/md/index.html</file>
         <file>res/md/3rdparty/markdown.css</file>
-        <file>res/md/3rdparty/MARKDOWN-LICENSE.txt</file>
-        <file>res/md/3rdparty/marked.js</file>
-        <file>res/md/3rdparty/MARKED-LICENSE.txt</file>
-        <file>res/md/3rdparty/qt_attribution.json</file>
-        <file>res/md-it/index.html</file>
-        <file>res/md-it/3rdparty/markdown-it.min.js</file>
-        <file>res/md-it/3rdparty/katex.min.css</file>
-        <file>res/md-it/3rdparty/katex.min.js</file>
-        <file>res/md-it/3rdparty/texmath.min.css</file>
-        <file>res/md-it/3rdparty/texmath.min.js</file>
         <file>res/style/mySt.qss</file>
     </qresource>
 </RCC>
