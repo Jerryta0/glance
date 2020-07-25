@@ -21,7 +21,6 @@ void MindGraphicsView::initTree()
     QGraphicsTextItem *pItem2 = new MindGraphicsTextItem();
     pItem2->setHtml("12344444444444444");
     scene->addItem(pItem2);
-    qDebug()<<this->size()<<this->scene->sceneRect();
     pItem2->setPos(-300,0);
 }
 void MindGraphicsView::scaleView(QWheelEvent *event)

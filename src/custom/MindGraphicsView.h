@@ -4,7 +4,7 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsTextItem>
-
+#include "MindGraphicsTextItem.h"
 /**
 * @author taojiayu
 * @date 2020-07-19
@@ -19,14 +19,21 @@ public:
     QPointF m_lastPointF;
     //缩放大小
     qreal m_scale = 1;
+
+    //数据
+    //root节点
+    MindGraphicsTextItem* root;
     void initTree();
     void wheelEvent(QWheelEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 //    void mouseDoubleClickEvent(QMouseEvent *event);
-    explicit MindGraphicsView(QWidget *parent = nullptr);
     //缩放方法
     void scaleView(QWheelEvent *event);
+
+
+    explicit MindGraphicsView(QWidget *parent = nullptr);
+
 
 signals:
 
